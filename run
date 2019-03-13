@@ -1,5 +1,6 @@
 #!/bin/bash
 
 DIRECTORY=$(cd `dirname $0` && pwd)
+cd $DIRECTORY
 source $DIRECTORY/sentinelbackend/venv/bin/activate
 $DIRECTORY/sentinelbackend/venv/bin/python3 $DIRECTORY/outputBaseScreen.py

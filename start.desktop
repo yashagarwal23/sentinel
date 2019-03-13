@@ -4,6 +4,6 @@ Name=Sentinel
 Comment=Sentinel Program
 Exec=bash -c "~/sentinel/run"
 Icon=utilities-terminal
-Terminal=true
+Terminal=false
 Type=Application
 Categories=Utility;Application;

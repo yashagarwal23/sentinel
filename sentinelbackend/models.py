@@ -1,21 +1,22 @@
-import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from sentinelbackend.utils import hash_file
-from sentinelbackend import db
 import os
 import datetime
+
+from sqlalchemy_declarative import Base, Blacklist, badIP, scheduledFiles, badProcess
+
+engine = create_engine('sqlite:////tmp/test.db')
+
+def loadsession():
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    return session
+
 
 if os.name != 'nt':
     import iptc
 
-class Blacklist(db.Model):
-    # sno = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ip = db.Column(db.String, primary_key=True)
-    port = db.Column(db.String(6), primary_key=True)
-
-class badIP(db.Model):
-    # sno = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ip = db.Column(db.String, primary_key=True)
-    count = db.Column(db.Integer)
 
 def getbadIphealth(ip):
     if ip == 0:
@@ -26,23 +27,13 @@ def getbadIphealth(ip):
     else:
         return 0
 
-class scheduledFiles(db.Model):
-    file = db.Column(db.String, primary_key=True)
-    hash = db.Column(db.String)
-    time = db.Column(db.String)
-    user = db.Column(db.String)
-
-class badProcess(db.Model):
-    PID = db.Column(db.Integer, primary_key=True)
-    IP = db.Column(db.String, primary_key=True)
-    positives = db.Column(db.Integer)
-    totals = db.Column(db.Integer)
 
 def addToBlacklist(ip, port):
     user = Blacklist(ip=ip, port=port)
+    session = loadsession()
     try:
-        db.session.add(user)
-        db.session.commit()
+        session.add(user)
+        session.commit()
         if port != '*':
             command = ("iptables -A INPUT -p tcp --sport {} -s {} -j DROP").format(str(port), str(ip))
             if os.name == 'nt':
@@ -69,10 +60,11 @@ def addToBlacklist(ip, port):
 
 
 def removeFromBlacklist(ip, port):
+    session = loadsession()
     if os.name == 'nt':
         user = Blacklist.query.filter_by(ip=ip).filter_by(port=port)
         user.delete()
-        db.session.commit()
+        session.commit()
         command = "netsh advfirewall firewall delete rule name=IPblock dir=in protocol=tcp remoteip={} localport={}".format(ip, port)
         if port=='*':
             command = "netsh advfirewall firewall delete rule name=IPblock dir=in protocol=tcp remoteip={}".format(ip)
@@ -85,7 +77,7 @@ def removeFromBlacklist(ip, port):
             command = ("iptables -D INPUT -p tcp --sport {} -s {} -j DROP").format(str(port), str(ip))
             os.system(command)
             user.delete()
-            db.session.commit()
+            session.commit()
             return "unblocked"
         else:
             return "no such rule present"
@@ -104,7 +96,7 @@ def removeFromBlacklist(ip, port):
                 command = ("iptables -D INPUT -p tcp --sport {} -s {} -j DROP").format(str(blackList.port), str(blackList.ip))
                 os.system(command)
         blockedIPlist.delete()
-        db.session.commit()
+        session.commit()
         return "unblocked"
 
 def getRules():
@@ -124,33 +116,35 @@ def getScheduledFiles():
 
 
 def addScheduledFile(filepath, hash, user="Devansh"):
+    session = loadsession()
     print(str(datetime.datetime.now()), user)
     newFile = scheduledFiles(file=filepath, hash=hash, time=str(datetime.datetime.now()), user=user)
-    db.session.add(newFile)
-    db.session.commit()
+    session.add(newFile)
+    session.commit()
 
 def removeFileFromScheduled(filepath):
+    session = loadsession()
     file = scheduledFiles.query.filter_by(file=filepath)
     file.delete()
-    db.session.commit()
+    session.commit()
 
 def badIPdetected(ip):
+    session = loadsession()
     oldIp = badIP.query.filter_by(ip=ip)
     # print(list(oldIp)[0])
     if oldIp is None or len(list(oldIp)) == 0:
         newIp = badIP(ip=ip, count=1)
-        db.session.add(newIp)
-        db.session.commit()
+        session.add(newIp)
+        session.commit()
     else:
         ip = oldIp.first()
         ip.count = ip.count + 1
-        db.session.commit()
+        session.commit()
         pass
-
 
 # db.drop_all()
 
-db.create_all()
+# db.create_all()
 # addToBlascklist()
 # removeFromBlacklist()
 # badIPdetected("12.12.12.12")

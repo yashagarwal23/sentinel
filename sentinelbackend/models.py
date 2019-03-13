@@ -4,7 +4,7 @@ from sentinelbackend.utils import hash_file
 import os
 import datetime
 
-from sqlalchemy_declarative import Base, Blacklist, badIP, scheduledFiles, badProcess
+from sentinelbackend.sqlalchemy_declarative import Base, Blacklist, badIP, scheduledFiles, badProcess
 
 engine = create_engine('sqlite:////tmp/test.db')
 
@@ -19,9 +19,10 @@ if os.name != 'nt':
 
 
 def getbadIphealth(ip):
+    session = loadsession()
     if ip == 0:
         return 0
-    result = list(badIP.query.filter_by(ip=ip))
+    result = list(session.query(badIP).filter_by(ip=ip))
     if len(result) > 0:
         return 6 + int((result.count % 10) / 5) if result.count > 5 else result.count
     else:
@@ -100,10 +101,11 @@ def removeFromBlacklist(ip, port):
         return "unblocked"
 
 def getRules():
+    session = loadsession()
     return list(map(lambda x: {
         "ip": x.ip,
         "port": x.port
-    }, Blacklist.query.all()))
+    }, session.query(Blacklist).all()))
 
 
 def getScheduledFiles():

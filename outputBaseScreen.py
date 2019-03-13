@@ -11,14 +11,17 @@ from PyQt5.QtWidgets import *
 import json, urllib.request
 import requests
 import VTscan
+from sentinelbackend.routes import *
 
 class Ui_BaseScreen(object):
     def setupUi(self, BaseScreen):
         BaseScreen.setObjectName("BaseScreen")
         self.URL = "localhost"
-        self.output = requests.post('http://'+self.URL+':5000/getProcesses').json()
+        # self.output = requests.post('http://'+self.URL+':5000/getProcesses').json()
         # print(requests.post('http://localhost:5000/getSystemUsage'))
-        self.systemUsage = requests.post('http://localhost:5000/getSystemUsage').json()
+        self.output = getprocesses()
+        # self.systemUsage = requests.post('http://localhost:5000/getSystemUsage').json()
+        self.systemUsage = getsystemUsage()
         BaseScreen.resize(1290, 775)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -804,7 +807,8 @@ class Ui_BaseScreen(object):
     def blockIP(self):
         dIP = str(self.output["processes"][self.selectedRow]["remoteAddr"][0])
         dPort = str(self.output["processes"][self.selectedRow]["remoteAddr"][1])
-        response = requests.post('http://' + self.URL + ':5000/blockIP', {'IP': dIP, 'port': dPort})
+        # response = requests.post('http://' + self.URL + ':5000/blockIP', {'IP': dIP, 'port': dPort})
+        response = block_ip(dIP, dPort)
         print(response)
         self.reset()
         # message = QMessageBox.question(self, "Your Concern", "Do you want to Block Ip "+dIP+" ?",
@@ -845,7 +849,8 @@ class Ui_BaseScreen(object):
         # if message == QMessageBox.Yes:
         print(pid)
         print("Blocked/Delete")
-        requests.post('http://' + self.URL + ':5000/killProcess', {'PID': pid})
+        # requests.post('http://' + self.URL + ':5000/killProcess', {'PID': pid})
+        killProcess(pid)
         self.reset()
             # QMessageBox.about(self, "Confirmed", "Process Kiled")
 
@@ -860,7 +865,8 @@ class Ui_BaseScreen(object):
     #     pid = str(self.output['processes'][self.selectedRow - 1]["PID"])
 
     def reset(self):
-        self.output = requests.post('http://' + self.URL + ':5000/getProcesses').json()
+        # self.output = requests.post('http://' + self.URL + ':5000/getProcesses').json()
+        self.output = getprocesses()
         self.retranslateTable(BaseScreen)
 
     def blockedIPList(self):
@@ -869,11 +875,13 @@ class Ui_BaseScreen(object):
 
     def scanIP(self):
         dIP = str(self.output["processes"][self.selectedRow]["remoteAddr"][0])
-        requests.post('http://' + self.URL + ':5000/killProcess', {'IP': dIP}).jsonify()
+        # requests.post('http://' + self.URL + ':5000/killProcess', {'IP': dIP}).jsonify()
+        scanIp(dIP)
 
 
     def runChk(self):
-        str = requests.post("http://"+self.URL+":5000/chkrScan")
+        # str = requests.post("http://"+self.URL+":5000/chkrScan")
+        str = chkscan()
         import os
         os.system('python ' + 'chkScan.py' + ' & disown')
 

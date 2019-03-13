@@ -8,6 +8,7 @@
 import requests
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem, QTableWidget
+from sentinelbackend.routes import *
 
 URL = "localhost:5000"
 class BlockIPListWindow(object):
@@ -15,7 +16,8 @@ class BlockIPListWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(640, 480)
 
-        self.output = requests.post('http://%s/getRules' % URL).json()
+        # self.output = requests.post('http://%s/getRules' % URL).json()
+        self.output = get_rules()
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -92,12 +94,14 @@ class BlockIPListWindow(object):
         row = self.tableWidget.currentRow()
         firstColumnInRow = self.tableWidget.item(row, 0)
         port = self.tableWidget.item(row,1).text()
-        requests.post('http://%s/unblockIP' % URL, data={"IP" : firstColumnInRow.text(), "port" : port})
+        # requests.post('http://%s/unblockIP' % URL, data={"IP" : firstColumnInRow.text(), "port" : port})
+        unblock_ip(firstColumnInRow.text(), port)
         self.refresh()
 
     def refresh(self):
         self.tableWidget.setRowCount(0)
-        self.output = requests.post('http://%s/getRules' % URL).json()
+        # self.output = requests.post('http://%s/getRules' % URL).json()
+        self.output = get_rules()
         self.tableWidget.setRowCount(len(self.output['rules']))
         count = 0
         for item in self.output['rules']:

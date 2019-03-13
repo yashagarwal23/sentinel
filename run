@@ -1,4 +1,5 @@
 #!/bin/bash
 
-source ~/sentinel/sentinelbackend/venv/bin/activate
-~/sentinel/sentinelbackend/venv/bin/python3 ~/sentinel/outputBaseScreen.py
+DIRECTORY=$(cd `dirname $0` && pwd)
+source $DIRECTORY/sentinelbackend/venv/bin/activate
+$DIRECTORY/sentinelbackend/venv/bin/python3 $DIRECTORY/outputBaseScreen.py

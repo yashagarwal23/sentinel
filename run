@@ -1,7 +1,0 @@
-#!/bin/bash
-
-cd ~/sentinel/sentinelfrontend
-source ~/sentinel/sentinelbackend/venv/bin/activate
-sudo ~/sentinel/sentinelbackend/venv/bin/python3 ~/sentinel/run.py & disown
-sleep 5
-~/sentinel/sentinelbackend/venv/bin/python3 ~/sentinel/sentinelfrontend/outputBaseScreen.py

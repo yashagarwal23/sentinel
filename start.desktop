@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Name=Sentinel
-Comment=Sentinel Program
-Exec=bash -c "~/sentinel/run"
+Comment=Sentinel_Program 
+Exec=bash -c 'sudo "$(dirname "$1")"/run.sh' dummy %k
 Icon=utilities-terminal
 Terminal=true
 Type=Application

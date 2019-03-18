@@ -8,10 +8,14 @@ geoip2==2.9.0
 idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10
+lxml==4.3.2
 MarkupSafe==1.1.1
 maxminddb==1.4.1
 numpy==1.16.2
 psutil==5.6.1
+pycountry==18.12.8
+pygal==2.4.0
+pygal-maps-world==1.0.2
 PyQt5==5.12
 PyQt5-sip==4.19.14
 python-iptables==0.13.0

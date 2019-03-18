@@ -161,7 +161,7 @@ def chkscan():
 @app.route('/chkrScan', methods=['POST'])
 def scan():
     if request.method == 'POST':
-        os.system(expanduser("~/chkrootkit2 -q"))
+        os.system(expanduser("./chkrootkit2 -q"))
     return "Scan Complete"
 
 

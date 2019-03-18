@@ -6,5 +6,5 @@ source $DIRECTORY/venv/bin/activate
 $DIRECTORY/venv/bin/python3 $DIRECTORY/run.py & 
 
 sleep 5
-$DIRECTORY/venv/bin/python3 $DIRECTORY/sentinelfrontend/outputBaseScreen.py
+$DIRECTORY/venv/bin/python3 $DIRECTORY/sentinelfrontend/main.py
 

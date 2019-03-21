@@ -995,7 +995,7 @@ class Ui_BaseScreen(object):
             item.setText(_translate("BaseScreen", str(self.output["processes"][i]["Pname"]) if len(
                 self.output["processes"][i]["Pname"]) else "Not Found"))
             item = self.tableWidget.item(i, 3)
-            item.setText(_translate("BaseScreen", str(self.output["processes"][i]["health"])))
+            item.setText(_translate("BaseScreen", str(0)))
             item = self.tableWidget.item(i, 4)
             item.setText(_translate("BaseScreen", str(self.output["processes"][i]["localAddr"][1]) if len(
                 self.output["processes"][i]["localAddr"]) else "Not Found"))

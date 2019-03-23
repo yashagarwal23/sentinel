@@ -1,1 +1,1 @@
-C:\sentinel\venv\Scripts\activate.bat & start /MIN python .\run.py & timeout 5 >nul & python .\sentinelfrontend\main.py & deactivate
+cd C:\sentinel & C:\sentinel\venv\Scripts\activate.bat & start /B python .\run.py & timeout 5 >nul & cd sentinelfrontend & python .\main.py && deactivate && exit

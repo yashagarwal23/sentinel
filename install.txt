@@ -1,0 +1,5 @@
+mkdir C:\sentinel
+
+python -m venv C:\sentinel\venv
+
+C:\sentinel\venv\Scripts\activate.bat & pip install -r %CD%\requirements.txt

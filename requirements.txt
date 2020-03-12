@@ -12,7 +12,7 @@ lxml==4.3.2
 MarkupSafe==1.1.1
 maxminddb==1.4.1
 numpy==1.16.2
-psutil==5.6.1
+psutil==5.6.6
 pycountry==18.12.8
 pygal==2.4.0
 pygal-maps-world==1.0.2

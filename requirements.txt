@@ -7,7 +7,7 @@ Flask-SQLAlchemy==2.3.2
 geoip2==2.9.0
 idna==2.8
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 lxml==4.3.2
 MarkupSafe==1.1.1
 maxminddb==1.4.1
